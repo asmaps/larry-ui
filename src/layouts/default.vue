@@ -34,9 +34,12 @@
 
     <q-page-container>
       <q-page padding>
-        <div class="flex row items-end reverse-wrap gutter">
+        <div class="flex row items-end reverse-wrap gutter-md">
           <div class="col">
-            <transition name="fadeIn">
+            <transition mode="out-in"
+                        duration="200"
+                        enter-active-class="animated fadeIn"
+                        leave-active-class="animated fadeOut">
               <router-view></router-view>
             </transition>
           </div>
