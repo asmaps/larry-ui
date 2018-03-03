@@ -22,6 +22,6 @@ deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
-  local_dir: "dist"
+  local_dir: "dist/spa-mat"
   repo: "asmaps/larry-ui-build"
   fqdn: "larry.asw.io"
