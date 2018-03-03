@@ -16,7 +16,7 @@ install:
   - npm install
 
 script:
-  - npm run-script build
+  - ./node_modules/quasar-cli/bin/quasar build
 
 deploy:
   provider: pages
