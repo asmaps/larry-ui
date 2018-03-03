@@ -7,7 +7,7 @@
       <q-card>
         <q-card-media v-if="upload.pic" overlay-position="top">
           <q-card-title slot="overlay">
-            Mod: {{ upload.title }}
+            {{ upload.title }}
             <span slot="subtitle">by {{ upload.author.username }}</span>
             <span slot="right" class="text-white" style="margin-left: 3rem">updated {{ upload.updatedAt | moment("from") }}</span>
           </q-card-title>

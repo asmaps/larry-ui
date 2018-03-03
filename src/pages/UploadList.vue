@@ -12,31 +12,30 @@
         @refresh="refresh">
         <q-td slot='body-cell-action' slot-scope="props" :props='props'>
           <q-btn color="primary"
+                 v-if="$route.params.uploadId !== props.row._id"
                  small
                  outline
                  icon="fa-info-circle"
-                 @click="$router.push({name: 'upload-detail', params: {uploadId: props.row._id}})">
-            Details</q-btn>
+                 label="Details"
+                 @click="$router.push({name: 'upload-detail', params: {uploadId: props.row._id}})" />
           <q-btn color="negative"
                  outline
                  small
                  icon="fa-trash-o"
+                 label="Delete"
                  v-if="props.row.author.username === $store.state.user.decodedToken.username"
-                 @click="deleteUpload(cell.row)">
-            Delete</q-btn>
+                 @click="deleteUpload(cell.row)" />
         </q-td>
         <q-td slot='body-cell-voting' slot-scope="props" :props='props'>
           {{ props.value.sum }} <i class="fa" :class="{'fa-caret-up text-positive': props.value.sum > 0, 'fa-caret-down text-negative': props.value.sum < 0, 'fa-sort text-dark': props.value.sum === 0}"></i>
         </q-td>
       </q-table>
     </div>
-    <div class="col-sm-12 col-md-6">
-      <transition appear
-                  enter-active-class="animated fadeIn"
-                  leave-active-class="animated fadeOut">
+    <transition appear name="grow-fade">
+      <div v-if="!showList" class="col-sm-12 col-md-6">
         <router-view></router-view>
-      </transition>
-    </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -135,5 +134,16 @@
 
 <style lang="styl" type="text/stylus" scoped>
   .animateMaxWidth
-    transition: max-width .5s ease-in-out;
+    transition: max-width .5s ease-in-out
+
+  .grow-fade-enter-active
+    transition: all .5s ease-in-out
+
+  .grow-fade-leave-active
+    transition: all .5s ease-in-out
+
+  .grow-fade-enter, .grow-fade-leave-to
+    max-width: 0
+    opacity: 0
+
 </style>
