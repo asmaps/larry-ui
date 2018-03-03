@@ -9,7 +9,7 @@
             <span slot="subtitle">by {{ upload.author.username }}</span>
             <span slot="right" class="text-white" style="margin-left: 3rem">updated {{ upload.updatedAt | moment("from") }}</span>
           </q-card-title>
-          <img :src="`${$http.defaults.baseURL}/media/${upload.pic}`">
+          <img :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`">
         </q-card-media>
         <q-card-title class="bg-positive text-white" v-else>
           {{ upload.title }}
@@ -38,7 +38,7 @@
           <q-card-title slot="overlay">
             Voting
           </q-card-title>
-          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic}`" :height="150">
+          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`" :height="150">
           </q-parallax>
         </q-card-media>
         <q-card-title v-else>
@@ -53,18 +53,18 @@
           <q-card-title slot="overlay">
             Dependencies
           </q-card-title>
-          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic}`" :height="150">
+          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`" :height="150">
           </q-parallax>
         </q-card-media>
         <q-card-title v-else>
           Dependencies
         </q-card-title>
         <q-card-main>
-          <q-btn disabled flat v-if="upload.dependency.length === 0">
+          <q-btn disabled flat v-if="!Array.isArray(upload.dependencies) || upload.dependencies.length === 0">
             No dependencies
           </q-btn>
           <div class="group" v-else>
-            <div v-for="d of upload.dependency"
+            <div v-for="d of upload.dependencies"
                  :key="d._id">
               <q-btn @click="$router.push({name: 'upload-detail', params: {uploadId: d._id}})" no-caps outline>
                 {{ d.title }}
@@ -76,14 +76,14 @@
           <q-card-title slot="overlay">
             File downloads
           </q-card-title>
-          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic}`" :height="150">
+          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`" :height="150">
           </q-parallax>
         </q-card-media>
         <q-card-title v-else>
           File downloads
         </q-card-title>
         <q-card-main>
-          <q-btn disabled flat v-if="upload.file.length === 0">
+          <q-btn disabled flat v-if="!Array.isArray(upload.files) || upload.files.length === 0">
             No files
           </q-btn>
           <div class="group"
@@ -112,7 +112,7 @@
           <q-card-title slot="overlay">
             Other data
           </q-card-title>
-          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic}`" :height="150">
+          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`" :height="150">
           </q-parallax>
         </q-card-media>
         <q-card-title v-else>

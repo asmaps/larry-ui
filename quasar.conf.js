@@ -4,7 +4,9 @@ module.exports = function (ctx) {
   return {
     plugins: [
       'i18n',
-      'axios'
+      'axios',
+      'prettyBytes',
+      'vueMoment',
     ],
     css: [
       'app.styl'
@@ -38,8 +40,8 @@ module.exports = function (ctx) {
       },
       env: ctx.dev
         ? { // so on dev we'll have
-          API: JSON.stringify('http://localhost:8080')
-          //API: JSON.stringify('https://frustrum.pictor.uberspace.de/larry')
+          //API: JSON.stringify('http://localhost:8080')
+          API: JSON.stringify('https://frustrum.pictor.uberspace.de/larry')
         }
         : { // and on build (production):
           API: JSON.stringify('https://frustrum.pictor.uberspace.de/larry')
@@ -78,6 +80,16 @@ module.exports = function (ctx) {
         'QStep',
         'QStepper',
         'QStepperNavigation',
+        'QTd',
+        'QSpinner',
+        'QCard',
+        'QCardTitle',
+        'QCardMain',
+        'QCardMedia',
+        'QCardSeparator',
+        'QCardActions',
+        'QParallax',
+        'QCheckbox',
       ],
       directives: [
         'Ripple'

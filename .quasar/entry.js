@@ -40,12 +40,12 @@ import 'src/css/app.styl'
 
 
 import Vue from 'vue'
-import Quasar, {QAlert,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QInput,QItem,QItemMain,QItemSide,QTable,QTabs,QRouteTab,QInnerLoading,QField,QStep,QStepper,QStepperNavigation,Ripple,LocalStorage,Notify} from 'quasar'
+import Quasar, {QAlert,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QInput,QItem,QItemMain,QItemSide,QTable,QTabs,QRouteTab,QInnerLoading,QField,QStep,QStepper,QStepperNavigation,QTd,QSpinner,QCard,QCardTitle,QCardMain,QCardMedia,QCardSeparator,QCardActions,QParallax,QCheckbox,Ripple,LocalStorage,Notify} from 'quasar'
 
 Vue.config.productionTip = false
 import App from 'src/App'
 
-Vue.use(Quasar, {components: {QAlert,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QInput,QItem,QItemMain,QItemSide,QTable,QTabs,QRouteTab,QInnerLoading,QField,QStep,QStepper,QStepperNavigation},directives: {Ripple},plugins: {LocalStorage,Notify}})
+Vue.use(Quasar, {components: {QAlert,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QInput,QItem,QItemMain,QItemSide,QTable,QTabs,QRouteTab,QInnerLoading,QField,QStep,QStepper,QStepperNavigation,QTd,QSpinner,QCard,QCardTitle,QCardMain,QCardMedia,QCardSeparator,QCardActions,QParallax,QCheckbox},directives: {Ripple},plugins: {LocalStorage,Notify}})
 
 
 
@@ -73,6 +73,12 @@ plugins.push(pluginI18n)
 
 import pluginAxios from 'src/plugins/axios'
 plugins.push(pluginAxios)
+
+import pluginPrettyBytes from 'src/plugins/prettyBytes'
+plugins.push(pluginPrettyBytes)
+
+import pluginVueMoment from 'src/plugins/vueMoment'
+plugins.push(pluginVueMoment)
 
 plugins.forEach(plugin => plugin({ app, router, store, Vue }))
 

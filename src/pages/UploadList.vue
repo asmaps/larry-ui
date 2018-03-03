@@ -5,28 +5,29 @@
         <h4>Available Mods</h4>
         <q-table
           no-data-label="No mods available"
+          row-key="name"
           :data="uploads"
           :config="tableConfig"
           :columns="tableColumns"
           @refresh="refresh">
-          <template slot='col-action' slot-scope='cell'>
+          <q-td slot='body-cell-action' slot-scope="props" :props='props'>
             <q-btn color="primary"
                    small
                    outline
                    icon="fa-info-circle"
-                   @click="$router.push({name: 'upload-detail', params: {uploadId: cell.row._id}})">
+                   @click="$router.push({name: 'upload-detail', params: {uploadId: props.row._id}})">
               Details</q-btn>
             <q-btn color="negative"
                    outline
                    small
                    icon="fa-trash-o"
-                   v-if="cell.row.author.username === $store.state.user.decodedToken.username"
+                   v-if="props.row.author.username === $store.state.user.decodedToken.username"
                    @click="deleteUpload(cell.row)">
               Delete</q-btn>
-          </template>
-          <template slot='col-voting' slot-scope='cell'>
-            {{ cell.data.sum }} <i class="fa" :class="{'fa-caret-up text-positive': cell.data.sum > 0, 'fa-caret-down text-negative': cell.data.sum < 0, 'fa-sort text-dark': cell.data.sum === 0}"></i>
-          </template>
+          </q-td>
+          <q-td slot='body-cell-voting' slot-scope="props" :props='props'>
+            {{ props.value.sum }} <i class="fa" :class="{'fa-caret-up text-positive': props.value.sum > 0, 'fa-caret-down text-negative': props.value.sum < 0, 'fa-sort text-dark': props.value.sum === 0}"></i>
+          </q-td>
         </q-table>
       </div>
       <router-view></router-view>
@@ -38,13 +39,9 @@
   import {
     Dialog,
   } from 'quasar'
-  import Truncate from 'vue-truncate-collapsed'
   import moment from 'moment'
 
   export default {
-    components: {
-      Truncate,
-    },
     computed: {
       showList () {
         return this.$route.name === 'upload-list'
@@ -71,12 +68,22 @@
           rowHeight: '60px',
         },
         tableColumns: [
-          {label: 'Title', field: 'title', width: '100px'},
-          {label: 'Description', field: 'description', width: '500px'},
-          {label: 'Author', field: 'author', width: '100px', format: el => el.username},
-          {label: 'Voting', field: 'voting', width: '100px'},
-          {label: 'Last update', field: 'updatedAt', width: '100px', format: el => moment(el).from()},
-          {label: 'Actions', field: 'action', width: '200px'},
+          {name: 'title', label: 'Title', field: 'title'},
+          {
+            name: 'description',
+            label: 'Description',
+            field: 'description',
+            format: el => typeof el === 'string' && el.length > 150 ? el.slice(0, 150) + '...' : el,
+          },
+          {name: 'author', label: 'Author', field: row => row.author.username},
+          {name: 'voting', label: 'Voting', field: 'voting'},
+          {
+            name: 'updatedAt',
+            label: 'Last update',
+            field: 'updatedAt',
+            format: el => moment(el).from(),
+          },
+          {name: 'action', label: 'Actions', field: 'action'},
         ],
       }
     },
