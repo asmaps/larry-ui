@@ -36,7 +36,9 @@
       <q-page padding>
         <div class="flex row items-end reverse-wrap gutter">
           <div class="col">
-            <router-view></router-view>
+            <transition name="fadeIn">
+              <router-view></router-view>
+            </transition>
           </div>
           <div class="col-auto" v-if="!$store.getters['user/loggedIn']">
             <api-auth></api-auth>

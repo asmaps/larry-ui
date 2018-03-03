@@ -1,11 +1,11 @@
 <template>
   <div class="flex row no-wrap gutter-lg">
-    <transition appear name="grow-fade">
-      <div v-if="!showList" class="col-sm-12 col-md-6 col-lg-8">
+    <transition name="grow-fade">
+      <div v-if="!showList" class="col-sm-12 col-lg-8 col-xl-7">
         <router-view></router-view>
       </div>
     </transition>
-    <div class="animateMaxWidth" :class="showList ? 'col-12' : 'gt-sm col-md-6 col-lg-4'">
+    <div class="animateMaxWidth" :class="showList ? 'col-12' : 'gt-md col-lg-4 col-xl-5'">
       <q-table
         no-data-label="No mods available"
         row-key="name"
@@ -84,7 +84,7 @@
             name: 'description',
             label: 'Description',
             field: 'description',
-            format: el => typeof el === 'string' && el.length > 150 ? el.slice(0, 150) + '...' : el,
+            format: el => typeof el === 'string' && el.length > 50 ? el.slice(0, 50) + '...' : el,
           },
           {name: 'author', label: 'Author', field: row => row.author.username},
           {name: 'voting', label: 'Voting', field: 'voting'},
