@@ -1,15 +1,17 @@
 <template>
   <div>
-    <p class="text-right">
-      <q-btn @click="$router.push({name: 'upload-list'})" outline icon-right="fa-times" label="Close" />
-    </p>
     <div v-if="upload">
       <q-card>
         <q-card-media v-if="upload.pic" overlay-position="top">
           <q-card-title slot="overlay">
             {{ upload.title }}
-            <span slot="subtitle">by {{ upload.author.username }}</span>
-            <span slot="right" class="text-white" style="margin-left: 3rem">updated {{ upload.updatedAt | moment("from") }}</span>
+            <span slot="subtitle">
+              by {{ upload.author.username }},
+              updated {{ upload.updatedAt | moment("from") }}
+            </span>
+            <span slot="right" class="text-white" style="margin-left: 3rem">
+            <q-btn @click="$router.push({name: 'upload-list'})" flat round icon="fa-times" color="negative"/>
+            </span>
           </q-card-title>
           <img :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`">
         </q-card-media>

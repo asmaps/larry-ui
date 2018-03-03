@@ -1,7 +1,11 @@
 <template>
   <div class="flex row no-wrap gutter-lg">
-    <div class="animateMaxWidth" :class="showList ? 'col-12' : 'gt-sm col-md-6'">
-      <h4>Available Mods</h4>
+    <transition appear name="grow-fade">
+      <div v-if="!showList" class="col-sm-12 col-md-6 col-lg-8">
+        <router-view></router-view>
+      </div>
+    </transition>
+    <div class="animateMaxWidth" :class="showList ? 'col-12' : 'gt-sm col-md-6 col-lg-4'">
       <q-table
         no-data-label="No mods available"
         row-key="name"
@@ -31,11 +35,6 @@
         </q-td>
       </q-table>
     </div>
-    <transition appear name="grow-fade">
-      <div v-if="!showList" class="col-sm-12 col-md-6">
-        <router-view></router-view>
-      </div>
-    </transition>
   </div>
 </template>
 
