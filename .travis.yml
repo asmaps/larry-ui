@@ -1,0 +1,27 @@
+language: node_js
+
+node_js:
+  - "8"
+
+notifications:
+  email: false
+#  irc:
+#    channels:
+#      - "irc.euirc.net#openclonk-dev"
+#    use_notice: true
+#    template:
+#      - "%{repository} (%{commit}): %{message}"
+
+install:
+  - npm install
+
+script:
+  - npm run-script build
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: "dist"
+  repo: "asmaps/larry-ui-build"
+  fqdn: "larry.asw.io"
