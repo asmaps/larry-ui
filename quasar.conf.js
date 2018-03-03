@@ -90,6 +90,7 @@ module.exports = function (ctx) {
         'QCardActions',
         'QParallax',
         'QCheckbox',
+        'QChip',
       ],
       directives: [
         'Ripple'

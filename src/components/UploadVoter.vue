@@ -40,7 +40,7 @@
     methods: {
       vote (impact) {
         let that = this
-        this.$http.put(`/uploads/${this.upload._id}/vote`, {vote: {impact: impact}}).then(response => that.$emit('voted'))
+        this.$http.post(`/uploads/${this.upload._id}/vote`, {vote: {impact: impact}}).then(response => that.$emit('voted'))
       },
     },
   }

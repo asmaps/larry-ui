@@ -1,8 +1,10 @@
 <template>
   <div>
-    <q-btn class="pull-right" @click="$router.push({name: 'upload-list'})" outline icon="fa-list">Back to list</q-btn>
-    <div v-if="upload" class="row">
-      <q-card class="col-6">
+    <p class="text-right">
+      <q-btn @click="$router.push({name: 'upload-list'})" outline icon-right="fa-times" label="Close" />
+    </p>
+    <div v-if="upload">
+      <q-card>
         <q-card-media v-if="upload.pic" overlay-position="top">
           <q-card-title slot="overlay">
             Mod: {{ upload.title }}
@@ -18,9 +20,12 @@
         </q-card-title>
         <q-card-separator />
         <q-card-main>
-          <p class="text-faded description">
+          <p class="text-faded">
             {{ upload.description }}
           </p>
+          <div class="group">
+            <q-chip v-for="tag of upload.tags" :key="tag">{{ tag }}</q-chip>
+          </div>
         </q-card-main>
         <q-card-actions>
           <q-btn @click="openInOpenclonk" color="positive" outline>
