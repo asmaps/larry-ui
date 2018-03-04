@@ -76,6 +76,7 @@ module.exports = function (ctx) {
         'QTabs',
         'QRouteTab',
         'QInnerLoading',
+        'QSpinnerComment',
         'QField',
         'QStep',
         'QStepper',
@@ -91,6 +92,7 @@ module.exports = function (ctx) {
         'QParallax',
         'QCheckbox',
         'QChip',
+        'QChatMessage',
       ],
       directives: [
         'Ripple'
@@ -98,6 +100,7 @@ module.exports = function (ctx) {
       plugins: [
         'LocalStorage',
         'Dialog',
+        'Notify',
       ]
     },
     // animations: 'all' --- includes all animations

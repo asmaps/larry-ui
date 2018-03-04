@@ -21,14 +21,6 @@
           <span slot="right" class="text-light" style="margin-left: 3rem">updated {{ upload.updatedAt | moment("from") }}</span>
         </q-card-title>
         <q-card-separator />
-        <q-card-main>
-          <p class="text-faded">
-            {{ upload.description }}
-          </p>
-          <div class="group">
-            <q-chip v-for="tag of upload.tags" :key="tag">{{ tag }}</q-chip>
-          </div>
-        </q-card-main>
         <q-card-actions>
           <q-btn @click="openInOpenclonk" color="positive" outline>
             Install mod with OpenClonk
@@ -41,6 +33,46 @@
             Delete mod
           </q-btn>
         </q-card-actions>
+        <q-card-main>
+          <p class="text-faded">
+            {{ upload.description }}
+          </p>
+          <div class="group">
+            <q-chip v-for="tag of upload.tags" :key="tag">{{ tag }}</q-chip>
+          </div>
+        </q-card-main>
+        <q-card-title>Comments</q-card-title>
+        <q-card-main>
+          <div class="flex row no-wrap items-center"
+               v-for="comment of comments.comments"
+               :key="comment._id">
+            <q-chat-message
+              style="max-width: 90%"
+              :name="(comment.author || {}).username"
+              :text="comment.body.split('\n').filter(el => el.trim() !== '')"
+              :stamp="$moment(comment.createdAt).format('LLLL')" />
+            <comment-voter :comment="comment"></comment-voter>
+          </div>
+          <div>
+            <q-input
+              v-model="comment"
+              type="textarea"
+              placeholder="Write a comment"
+              :max-height="100"
+              @keyup.enter="sendComment"
+              :after="[
+                        {
+                          icon: 'fa-paper-plane',
+                          content: true,
+                          handler () {
+                            sendComment()
+                          }
+                        }
+                      ]"
+            />
+            <q-inner-loading :visible="commentSaving"><q-spinner-comment></q-spinner-comment></q-inner-loading>
+          </div>
+        </q-card-main>
         <q-card-media v-if="upload.pic" overlay-position="bottom">
           <q-card-title slot="overlay">
             Voting
@@ -139,10 +171,12 @@
 <script>
   import { openURL } from 'quasar'
   import UploadVoter from 'components/UploadVoter'
+  import CommentVoter from 'components/CommentVoter'
   import FileSaver from 'file-saver'
 
   export default {
     components: {
+      CommentVoter,
       UploadVoter,
     },
     computed: {
@@ -164,6 +198,9 @@
       return {
         upload: null,
         downloadProgresses: {},
+        comments: [],
+        comment: '',
+        commentSaving: false,
       }
     },
     methods: {
@@ -171,10 +208,23 @@
         let that = this
         this.$http.get(`/uploads/${this.routeId}`).then(response => {
           that.upload = response.data
+          that.loadComments()
         }).catch((error) => {
           if (error.response.status === 404) {
             that.$router.push({name: 'upload-list'})
           }
+          else {
+            console.error(error)
+          }
+        })
+      },
+      loadComments () {
+        let that = this
+        this.$http.get(`/uploads/${this.routeId}/comments`).then(response => {
+          that.comments = response.data
+        }).catch((error) => {
+          that.$q.notify('Failed loading comments')
+          console.error(error)
         })
       },
       deleteUpload (upload) {
@@ -218,6 +268,23 @@
       },
       openInOpenclonk () {
         openURL(`openclonk://installmod/${this.upload._id}`)
+      },
+      sendComment () {
+        let that = this
+        this.commentSaving = true
+        if (this.comment.length > 0) {
+          this.$http.post(`/uploads/${this.upload._id}/comments`, {body: this.comment}).then(() => {
+            that.comment = ''
+            that.$q.notify({color: 'positive', icon: 'fa-check', message: 'Comment sent'})
+            that.loadComments()
+            this.commentSaving = false
+          }).catch((error) => {
+            that.$q.notify('Error sending your comment')
+            that.loadComments()
+            this.commentSaving = false
+            console.error(error)
+          })
+        }
       }
     }
   }

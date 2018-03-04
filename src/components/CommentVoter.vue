@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="flex row items-center group" v-if="$store.getters['user/loggedIn']">
-      <h5 style="margin: 0 1rem">
+      <span style="margin: 0 1rem">
         <i class="fa"
-           :class="{'fa-caret-up text-positive': upload.voting.sum > 0, 'fa-caret-down text-negative': upload.voting.sum < 0, 'fa-sort text-dark': upload.voting.sum === 0}">
+           :class="{'fa-caret-up text-positive': comment.voting.sum > 0, 'fa-caret-down text-negative': comment.voting.sum < 0, 'fa-sort text-dark': comment.voting.sum === 0}">
         </i>
-        {{ upload.voting.sum }}
-      </h5>
-      <span v-if="upload.author.username !== $store.state.user.decodedToken.username && !myVote">
+        {{ comment.voting.sum }}
+      </span>
+      <span v-if="comment.author.username !== $store.state.user.decodedToken.username && !myVote">
         <q-btn color="negative" round small icon="fa-thumbs-down" @click="vote(-1)"></q-btn>
         <q-btn color="positive" round small icon="fa-thumbs-up" @click="vote(1)"></q-btn>
       </span>
@@ -15,9 +15,9 @@
     </div>
     <div class="group" v-else>
       <i class="fa"
-         :class="{'fa-caret-up text-positive': upload.voting.sum > 0, 'fa-caret-down text-negative': upload.voting.sum < 0, 'fa-sort text-dark': upload.voting.sum === 0}">
+         :class="{'fa-caret-up text-positive': comment.voting.sum > 0, 'fa-caret-down text-negative': comment.voting.sum < 0, 'fa-sort text-dark': comment.voting.sum === 0}">
       </i>
-      {{ upload.voting.sum }} votes
+      {{ comment.voting.sum }} votes
       <em>Please log in to vote</em>
     </div>
   </div>
@@ -30,7 +30,7 @@
 
   export default {
     props: {
-      upload: Object,
+      comment: Object,
     },
     components: {
       QBtn,
@@ -40,16 +40,16 @@
     },
     computed: {
       myVote () {
-        if (!this.upload || !this.upload.voting || !Array.isArray(this.upload.voting.votes) || this.upload.voting.votes.length === 0) {
+        if (!this.comment || !this.comment.voting || !Array.isArray(this.comment.voting.votes) || this.comment.voting.votes.length === 0) {
           return undefined
         }
-        return this.upload.voting.votes[0]
+        return this.comment.voting.votes[0]
       },
     },
     methods: {
       vote (impact) {
         let that = this
-        this.$http.post(`/uploads/${this.upload._id}/vote`, {impact: impact}).then(response => that.$emit('voted'))
+        this.$http.post(`/comments/${this.comment.upload}/comments/${this.comment._id}/vote`, {impact: impact}).then(response => that.$emit('voted'))
       },
     },
   }

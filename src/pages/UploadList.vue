@@ -20,15 +20,8 @@
                  small
                  outline
                  icon="fa-info-circle"
-                 label="Details"
+                 label="Show"
                  @click="$router.push({name: 'upload-detail', params: {uploadId: props.row._id}})" />
-          <q-btn color="negative"
-                 outline
-                 small
-                 icon="fa-trash"
-                 label="Delete"
-                 v-if="$route.params.uploadId !== props.row._id && props.row.author.username === $store.state.user.decodedToken.username"
-                 @click="deleteUpload(props.row)" />
         </q-td>
         <q-td slot='body-cell-voting' slot-scope="props" :props='props'>
           {{ props.value.sum }} <i class="fa" :class="{'fa-caret-up text-positive': props.value.sum > 0, 'fa-caret-down text-negative': props.value.sum < 0, 'fa-sort text-dark': props.value.sum === 0}"></i>
