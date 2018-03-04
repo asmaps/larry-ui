@@ -7,9 +7,9 @@
         </i>
         {{ comment.voting.sum }}
       </span>
-      <span v-if="comment.author.username !== $store.state.user.decodedToken.username && !myVote">
-        <q-btn color="negative" round small icon="fa-thumbs-down" @click="vote(-1)"></q-btn>
-        <q-btn color="positive" round small icon="fa-thumbs-up" @click="vote(1)"></q-btn>
+      <span v-if="!myVote">
+        <q-btn color="negative" round size="sm" flat icon="fa-thumbs-down" @click="vote(-1)"></q-btn>
+        <q-btn color="positive" round size="sm" flat icon="fa-thumbs-up" @click="vote(1)"></q-btn>
       </span>
       <span v-if="myVote">You voted <i :class="`fas fa-thumbs-${myVote.impact === 1 ? 'up text-positive' : 'down text-negative'}`"></i></span>
     </div>
@@ -49,7 +49,7 @@
     methods: {
       vote (impact) {
         let that = this
-        this.$http.post(`/comments/${this.comment.upload}/comments/${this.comment._id}/vote`, {impact: impact}).then(response => that.$emit('voted'))
+        this.$http.post(`/uploads/${this.comment.upload}/comments/${this.comment._id}/vote`, {impact: impact}).then(response => that.$emit('voted'))
       },
     },
   }

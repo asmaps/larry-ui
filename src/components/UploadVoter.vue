@@ -7,7 +7,7 @@
         </i>
         {{ upload.voting.sum }}
       </h5>
-      <span v-if="upload.author.username !== $store.state.user.decodedToken.username && !myVote">
+      <span v-if="!myVote">
         <q-btn color="negative" round small icon="fa-thumbs-down" @click="vote(-1)"></q-btn>
         <q-btn color="positive" round small icon="fa-thumbs-up" @click="vote(1)"></q-btn>
       </span>

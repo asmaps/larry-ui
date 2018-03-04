@@ -51,7 +51,7 @@
               :name="(comment.author || {}).username"
               :text="comment.body.split('\n').filter(el => el.trim() !== '')"
               :stamp="$moment(comment.createdAt).format('LLLL')" />
-            <comment-voter :comment="comment"></comment-voter>
+            <comment-voter @voted="loadComments" :comment="comment"></comment-voter>
           </div>
           <div>
             <q-input
