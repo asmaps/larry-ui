@@ -40,12 +40,12 @@ import 'src/css/app.styl'
 
 
 import Vue from 'vue'
-import Quasar, {QAlert,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QInput,QItem,QItemMain,QItemSide,QTable,QTabs,QRouteTab,QInnerLoading,QSpinnerComment,QField,QStep,QStepper,QStepperNavigation,QTd,QSpinner,QCard,QCardTitle,QCardMain,QCardMedia,QCardSeparator,QCardActions,QParallax,QCheckbox,QChip,QChatMessage,Ripple,LocalStorage,Dialog,Notify} from 'quasar'
+import Quasar, {QAlert,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QInput,QItem,QItemMain,QItemSide,QTable,QTabs,QRouteTab,QInnerLoading,QSpinnerComment,QField,QStep,QStepper,QStepperNavigation,QTd,QSpinner,QCard,QCardTitle,QCardMain,QCardMedia,QCardSeparator,QCardActions,QParallax,QCheckbox,QChip,QChatMessage,QChipsInput,Ripple,LocalStorage,Dialog,Notify} from 'quasar'
 
 Vue.config.productionTip = false
 import App from 'src/App'
 
-Vue.use(Quasar, {components: {QAlert,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QInput,QItem,QItemMain,QItemSide,QTable,QTabs,QRouteTab,QInnerLoading,QSpinnerComment,QField,QStep,QStepper,QStepperNavigation,QTd,QSpinner,QCard,QCardTitle,QCardMain,QCardMedia,QCardSeparator,QCardActions,QParallax,QCheckbox,QChip,QChatMessage},directives: {Ripple},plugins: {LocalStorage,Dialog,Notify}})
+Vue.use(Quasar, {components: {QAlert,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QInput,QItem,QItemMain,QItemSide,QTable,QTabs,QRouteTab,QInnerLoading,QSpinnerComment,QField,QStep,QStepper,QStepperNavigation,QTd,QSpinner,QCard,QCardTitle,QCardMain,QCardMedia,QCardSeparator,QCardActions,QParallax,QCheckbox,QChip,QChatMessage,QChipsInput},directives: {Ripple},plugins: {LocalStorage,Dialog,Notify}})
 
 
 

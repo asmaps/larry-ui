@@ -8,16 +8,23 @@
           <div class="text-negative" v-if="errors.slug">
             {{ errors.slug }}
           </div>
-          <q-field :error="errors.title !== undefined"
-                   :error-label="errors.title"
-                   icon="fa-pencil">
-            <q-input v-model="title" float-label="Title" />
-          </q-field>
-          <q-field :error="errors.description !== undefined"
-                   :error-label="errors.description"
-                   icon="fa-bars">
-            <q-input v-model="description" type="textarea" float-label="Description" />
-          </q-field>
+          <div class="group">
+            <q-field :error="errors.title !== undefined"
+                     :error-label="errors.title"
+                     icon="fa-pencil">
+              <q-input v-model="title" float-label="Title" />
+            </q-field>
+            <q-field :error="errors.description !== undefined"
+                     :error-label="errors.description"
+                     icon="fa-bars">
+              <q-input v-model="description" type="textarea" float-label="Description" />
+            </q-field>
+            <q-field :error="errors.tags !== undefined"
+                     :error-label="errors.tags"
+                     icon="fa-tags">
+              <q-chips-input v-model="tags" float-label="Tags"></q-chips-input>
+            </q-field>
+          </div>
           <q-stepper-navigation>
             <q-btn color="primary" :disabled="!description || !title" @click="$refs.stepper.next()">Next</q-btn>
           </q-stepper-navigation>
@@ -133,6 +140,7 @@
     data () {
       return {
         files: [],
+        tags: [],
         title: '',
         description: '',
         slug: '',
@@ -229,6 +237,7 @@
           description: this.description,
           files: this.files.map(el => el._id),
           pic: this.pic,
+          tags: this.tags,
         }
         this.$http.post('/uploads', params)
           .then((response) => {

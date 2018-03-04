@@ -93,6 +93,7 @@ module.exports = function (ctx) {
         'QCheckbox',
         'QChip',
         'QChatMessage',
+        'QChipsInput',
       ],
       directives: [
         'Ripple'
