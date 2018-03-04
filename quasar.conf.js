@@ -97,7 +97,7 @@ module.exports = function (ctx) {
       ],
       plugins: [
         'LocalStorage',
-        'Notify',
+        'Dialog',
       ]
     },
     // animations: 'all' --- includes all animations

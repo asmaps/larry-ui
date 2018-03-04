@@ -95,7 +95,7 @@
           </q-btn>
           <div class="group"
                v-else
-               v-for="fid of upload.file"
+               v-for="fid of upload.files"
                :key="fid._id">
             <q-btn loader
                    no-caps
@@ -106,12 +106,12 @@
               <span slot="loading">Downloading...</span>
             </q-btn>
             <span v-if="downloadProgresses[fid._id]">
-                <q-transition enter="fadeIn" leave="fadeOut" mode="out-in">
+                <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in">
                   <span key="sizeDownloaded" v-if="downloadProgresses[fid._id].percentage < 100">
                     {{ downloadProgresses[fid._id].loaded|prettyBytes }} / {{ downloadProgresses[fid._id].total|prettyBytes }}
                   </span>
                   <span key="downloadDone" v-else><i class="fa fa-check fa-2x text-positive"></i></span>
-                </q-transition>
+                </transition>
               </span>
           </div>
         </q-card-main>
@@ -137,10 +137,7 @@
 </template>
 
 <script>
-  import {
-    Dialog,
-    openURL,
-  } from 'quasar'
+  import { openURL } from 'quasar'
   import UploadVoter from 'components/UploadVoter'
   import FileSaver from 'file-saver'
 
@@ -174,25 +171,25 @@
         let that = this
         this.$http.get(`/uploads/${this.routeId}`).then(response => {
           that.upload = response.data
+        }).catch((error) => {
+          if (error.response.status === 404) {
+            that.$router.push({name: 'upload-list'})
+          }
         })
       },
-      deleteUpload () {
+      deleteUpload (upload) {
         let that = this
-        Dialog.create({
+        this.$q.dialog({
           title: 'Delete mod?',
-          message: `Do you really want to delete the mod ${this.upload.title}?<br>This cannot be undone!`,
-          buttons: [
-            'Cancel',
-            {
-              label: '<i class="fa fa-trash-o"></i> Yes, delete!',
-              color: 'negative',
-              outline: true,
-              handler () {
-                that.$http.delete(`/uploads/${that.routeId}`).then(response => that.$router.push({name: 'upload-list'}))
-              }
-            }
-          ]
-        })
+          message: `Do you really want to delete the mod "${upload.title}"? This cannot be undone!`,
+          ok: {
+            label: 'Yes, delete!',
+            icon: 'fa-trash',
+            color: 'negative',
+            outline: true,
+          },
+          cancel: 'Cancel',
+        }).then(() => that.$http.delete(`/uploads/${upload._id}`).then(response => that.refresh()))
       },
       downloadMedia (mediaId, filename, done) {
         console.log({mediaId, done})

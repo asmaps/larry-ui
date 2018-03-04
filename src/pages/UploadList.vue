@@ -25,10 +25,10 @@
           <q-btn color="negative"
                  outline
                  small
-                 icon="fa-trash-o"
+                 icon="fa-trash"
                  label="Delete"
-                 v-if="props.row.author.username === $store.state.user.decodedToken.username"
-                 @click="deleteUpload(cell.row)" />
+                 v-if="$route.params.uploadId !== props.row._id && props.row.author.username === $store.state.user.decodedToken.username"
+                 @click="deleteUpload(props.row)" />
         </q-td>
         <q-td slot='body-cell-voting' slot-scope="props" :props='props'>
           {{ props.value.sum }} <i class="fa" :class="{'fa-caret-up text-positive': props.value.sum > 0, 'fa-caret-down text-negative': props.value.sum < 0, 'fa-sort text-dark': props.value.sum === 0}"></i>
@@ -39,9 +39,6 @@
 </template>
 
 <script>
-  import {
-    Dialog,
-  } from 'quasar'
   import moment from 'moment'
 
   export default {
@@ -111,21 +108,17 @@
       },
       deleteUpload (upload) {
         let that = this
-        Dialog.create({
+        this.$q.dialog({
           title: 'Delete mod?',
-          message: `Do you really want to delete the mod ${upload.title}?<br>This cannot be undone!`,
-          buttons: [
-            'Cancel',
-            {
-              label: '<i class="fa fa-trash-o"></i> Yes, delete!',
-              color: 'negative',
-              outline: true,
-              handler () {
-                that.$http.delete(`/uploads/${upload._id}`).then(response => that.refresh())
-              }
-            }
-          ]
-        })
+          message: `Do you really want to delete the mod "${upload.title}"? This cannot be undone!`,
+          ok: {
+            label: 'Yes, delete!',
+            icon: 'fa-trash',
+            color: 'negative',
+            outline: true,
+          },
+          cancel: 'Cancel',
+        }).then(() => that.$http.delete(`/uploads/${upload._id}`).then(response => that.refresh()))
       },
     },
   }

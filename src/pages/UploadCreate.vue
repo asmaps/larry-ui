@@ -225,12 +225,10 @@
           return
         }
         let params = {
-          upload: {
-            title: this.title,
-            description: this.description,
-            files: this.files.map(el => el._id),
-            pic: this.pic,
-          },
+          title: this.title,
+          description: this.description,
+          files: this.files.map(el => el._id),
+          pic: this.pic,
         }
         this.$http.post('/uploads', params)
           .then((response) => {
