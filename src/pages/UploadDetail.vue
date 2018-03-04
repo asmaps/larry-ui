@@ -25,7 +25,7 @@
           <q-btn @click="openInOpenclonk" color="positive" outline>
             Install mod with OpenClonk
           </q-btn>
-          <q-btn v-if="$store.state.user.decodedToken.username === upload.author.username"
+          <q-btn v-if="username === upload.author.username"
                  outline
                  color="negative"
                  icon="fa-trash-o"
@@ -48,9 +48,16 @@
                :key="comment._id">
             <q-chat-message
               style="max-width: 90%"
+              :bg-color="comment.voting.sum > 0 ? 'light-green-2' : ( comment.voting.sum === 0 ? 'grey-3' : 'red-2')"
               :name="(comment.author || {}).username"
               :text="comment.body.split('\n').filter(el => el.trim() !== '')"
               :stamp="$moment(comment.createdAt).format('LLLL')" />
+            <q-btn v-if="username === comment.author.username"
+                   flat
+                   size="sm"
+                   icon="fa-trash"
+                   color="negative"
+                   @click="deleteComment(comment)"/>
             <comment-voter @voted="loadComments" :comment="comment"></comment-voter>
           </div>
           <div>
@@ -183,6 +190,9 @@
       routeId () {
         return this.$route.params.uploadId
       },
+      username () {
+        return this.$store.state.user.decodedToken.username
+      },
     },
     watch: {
       routeId: {
@@ -285,7 +295,11 @@
             console.error(error)
           })
         }
-      }
+      },
+      deleteComment (comment) {
+        let that = this
+        this.$http.delete(`/uploads/${comment.upload}/comments/${comment._id}/`).then(() => that.loadComments())
+      },
     }
   }
 </script>
