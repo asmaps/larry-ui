@@ -71,4 +71,29 @@
 </script>
 
 <style>
+  .indent {
+    margin-left: 1rem;
+  }
+
+  .markdown h1 {
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: bold;
+  }
+
+  .markdown h2 {
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .markdown h3 {
+    font-size: 1.1rem;
+    font-style: italic;
+  }
+
+  .markdown h4, .markdown h5, .markdown h6 {
+    font-size: 1.0rem;
+    font-style: italic;
+  }
 </style>

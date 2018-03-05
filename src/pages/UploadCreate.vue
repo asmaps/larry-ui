@@ -14,20 +14,22 @@
                      icon="fa-pencil">
               <q-input v-model="title" float-label="Title" />
             </q-field>
-            <q-field :error="errors.description !== undefined"
-                     :error-label="errors.description"
-                     icon="fa-bars">
-              <q-input v-model="description" type="textarea" float-label="Description" />
-            </q-field>
             <q-field :error="errors.tags !== undefined"
                      :error-label="errors.tags"
                      icon="fa-tags">
               <q-chips-input v-model="tags" float-label="Tags"></q-chips-input>
             </q-field>
+            <q-field :error="errors.description !== undefined"
+                     :error-label="errors.description"
+                     icon="fa-bars">
+              <q-input v-model="description" type="textarea" float-label="Description (Markdown possible)" />
+            </q-field>
           </div>
           <q-stepper-navigation>
             <q-btn color="primary" :disabled="!description || !title" @click="$refs.stepper.next()">Next</q-btn>
           </q-stepper-navigation>
+          <h5>Description Preview</h5>
+          <vue-markdown class="markdown indent" :html="false" :source="description"></vue-markdown>
         </q-step>
         <q-step name="pic" title="Add image">
           <p>You can upload an image, e.g. a screenshot, that will be used as a preview for your mod</p>
@@ -128,6 +130,7 @@
 <script>
   import Dropzone from 'vue2-dropzone'
   import 'vue2-dropzone/dist/vue2Dropzone.css'
+  import VueMarkdown from 'vue-markdown'
 
   import {
     LocalStorage,
@@ -136,6 +139,7 @@
   export default {
     components: {
       Dropzone,
+      VueMarkdown,
     },
     data () {
       return {
@@ -264,8 +268,3 @@
     },
   }
 </script>
-
-<style lang="styl" type="text/stylus" scoped>
-  .indent
-    margin: 1rem 3rem 2rem 3rem
-</style>

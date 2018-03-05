@@ -35,8 +35,11 @@
         </q-card-actions>
         <q-card-main>
           <p class="text-faded">
-            {{ upload.description }}
+            <vue-markdown class="markdown" :html="false" :source="upload.description"></vue-markdown>
           </p>
+        </q-card-main>
+        <q-card-title>Tags</q-card-title>
+        <q-card-main>
           <div class="group">
             <q-chip v-for="tag of upload.tags" :key="tag">{{ tag }}</q-chip>
           </div>
@@ -180,11 +183,13 @@
   import UploadVoter from 'components/UploadVoter'
   import CommentVoter from 'components/CommentVoter'
   import FileSaver from 'file-saver'
+  import VueMarkdown from 'vue-markdown'
 
   export default {
     components: {
       CommentVoter,
       UploadVoter,
+      VueMarkdown,
     },
     computed: {
       routeId () {
