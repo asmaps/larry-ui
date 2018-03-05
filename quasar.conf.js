@@ -41,10 +41,10 @@ module.exports = function (ctx) {
       env: ctx.dev
         ? { // so on dev we'll have
           //API: JSON.stringify('http://localhost:8080')
-          API: JSON.stringify('https://frustrum.pictor.uberspace.de/larry')
+          API: JSON.stringify('https://larry-api.asw.io')
         }
         : { // and on build (production):
-          API: JSON.stringify('https://frustrum.pictor.uberspace.de/larry')
+          API: JSON.stringify('https://larry-api.asw.io')
         },
     },
     devServer: {
