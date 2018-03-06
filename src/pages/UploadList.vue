@@ -14,6 +14,9 @@
         :columns="tableColumns"
         :visible-columns="visibleColumns"
         @refresh="refresh">
+        <q-td slot='body-cell-title' slot-scope="props" :props='props'>
+          <router-link :to="{name: 'upload-detail', params: {uploadId: props.row._id}}">{{ props.value }}</router-link>
+        </q-td>
         <q-td slot='body-cell-action' slot-scope="props" :props='props'>
           <q-btn color="primary"
                  v-if="$route.params.uploadId !== props.row._id"
