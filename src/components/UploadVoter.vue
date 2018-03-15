@@ -1,17 +1,22 @@
 <template>
   <div>
-    <div class="flex row items-center group" v-if="$store.getters['user/loggedIn']">
-      <h5 style="margin: 0 1rem">
-        <i class="fa"
-           :class="{'fa-caret-up text-positive': upload.voting.sum > 0, 'fa-caret-down text-negative': upload.voting.sum < 0, 'fa-sort text-dark': upload.voting.sum === 0}">
-        </i>
-        {{ upload.voting.sum }}
-      </h5>
-      <span v-if="!myVote">
-        <q-btn color="negative" round small icon="fa-thumbs-down" @click="vote(-1)"></q-btn>
-        <q-btn color="positive" round small icon="fa-thumbs-up" @click="vote(1)"></q-btn>
-      </span>
-      <span v-if="myVote">You voted <i :class="`fas fa-thumbs-${myVote.impact === 1 ? 'up text-positive' : 'down text-negative'}`"></i></span>
+    <div v-if="$store.getters['user/loggedIn']">
+      <p style="margin: 0 1rem">
+        <big>
+          <i class="fa"
+             :class="{'fa-caret-up text-positive': upload.voting.sum > 0, 'fa-caret-down text-negative': upload.voting.sum < 0, 'fa-sort text-dark': upload.voting.sum === 0}">
+          </i>
+          {{ upload.voting.sum }}
+        </big>
+        <small v-if="myVote">
+          You voted <i :class="`fas fa-thumbs-${myVote.impact === 1 ? 'up text-positive' : 'down text-negative'}`"></i>
+        </small>
+      </p>
+      <div class="generic-margin">
+        Change your vote:
+        <q-btn v-if="!myVote || myVote.impact === 1" color="negative" round outline size="sm" icon="fa-thumbs-down" @click="vote(-1)"></q-btn>
+        <q-btn v-if="!myVote || myVote.impact === -1" color="positive" round outline size="sm" icon="fa-thumbs-up" @click="vote(1)"></q-btn>
+      </div>
     </div>
     <div class="group" v-else>
       <i class="fa"

@@ -8,8 +8,8 @@
         {{ comment.voting.sum }}
       </span>
       <span v-if="!myVote">
-        <q-btn color="negative" round size="sm" flat icon="fa-thumbs-down" @click="vote(-1)"></q-btn>
-        <q-btn color="positive" round size="sm" flat icon="fa-thumbs-up" @click="vote(1)"></q-btn>
+        <q-btn color="negative" round size="sm" outline icon="fa-thumbs-down" @click="vote(-1)"></q-btn>
+        <q-btn color="positive" round size="sm" outline icon="fa-thumbs-up" @click="vote(1)"></q-btn>
       </span>
       <span v-if="myVote">You voted <i :class="`fas fa-thumbs-${myVote.impact === 1 ? 'up text-positive' : 'down text-negative'}`"></i></span>
     </div>

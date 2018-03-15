@@ -22,30 +22,53 @@
         </q-card-title>
         <q-card-separator />
         <q-card-actions>
-          <q-btn @click="openInOpenclonk" color="positive" outline>
-            Install mod with OpenClonk
-          </q-btn>
+          <q-btn @click="openInOpenclonk"
+                 color="positive"
+                 outline
+                 icon="fa-download"
+                 label="Install mod with OpenClonk" />
           <q-btn v-if="username === upload.author.username"
                  outline
                  color="negative"
-                 icon="fa-trash-o"
-                 @click="deleteUpload(upload)">
-            Delete mod
-          </q-btn>
+                 icon="fa-trash"
+                 @click="deleteUpload(upload)"
+                 label="Delete mod" />
         </q-card-actions>
         <q-card-main>
           <p class="text-faded">
             <vue-markdown class="markdown" :html="false" :source="upload.description"></vue-markdown>
           </p>
         </q-card-main>
-        <q-card-title>Tags</q-card-title>
+        <q-card-separator />
+        <q-card-title><i class="far fa-hand-point-right"></i> Tags</q-card-title>
         <q-card-main>
           <div class="group">
             <q-chip v-for="tag of upload.tags" :key="tag">{{ tag }}</q-chip>
           </div>
         </q-card-main>
-        <q-card-title>Comments</q-card-title>
+        <q-card-separator />
+        <q-card-title><i class="far fa-hand-point-right"></i> Comments</q-card-title>
         <q-card-main>
+          <p v-if="loggedIn">
+            <q-input
+              v-model="comment"
+              placeholder="Write a comment"
+              :max-height="100"
+              @keyup.enter="sendComment"
+              :after="[
+                        {
+                          icon: 'fa-paper-plane',
+                          content: true,
+                          handler () {
+                            sendComment()
+                          }
+                        }
+                      ]"
+            />
+          </p>
+          <div v-else>
+            <em>Please log in to comment</em>
+          </div>
           <div class="flex row no-wrap items-center"
                v-for="comment of comments.comments"
                :key="comment._id">
@@ -63,50 +86,19 @@
                    @click="deleteComment(comment)"/>
             <comment-voter @voted="loadComments" :comment="comment"></comment-voter>
           </div>
-          <div>
-            <q-input
-              v-model="comment"
-              type="textarea"
-              placeholder="Write a comment"
-              :max-height="100"
-              @keyup.enter="sendComment"
-              :after="[
-                        {
-                          icon: 'fa-paper-plane',
-                          content: true,
-                          handler () {
-                            sendComment()
-                          }
-                        }
-                      ]"
-            />
-            <q-inner-loading :visible="commentSaving"><q-spinner-comment></q-spinner-comment></q-inner-loading>
-          </div>
         </q-card-main>
-        <q-card-media v-if="upload.pic" overlay-position="bottom">
-          <q-card-title slot="overlay">
-            Voting
-          </q-card-title>
-          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`" :height="150">
-          </q-parallax>
-        </q-card-media>
-        <q-card-title v-else>
-          Voting
+        <q-card-separator />
+        <q-card-title>
+          <i class="far fa-hand-point-right"></i> Voting
         </q-card-title>
         <q-card-main>
           <div class="group">
             <upload-voter :upload="upload" @voted="refresh"></upload-voter>
           </div>
         </q-card-main>
-        <q-card-media v-if="upload.pic" overlay-position="bottom">
-          <q-card-title slot="overlay">
-            Dependencies
-          </q-card-title>
-          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`" :height="150">
-          </q-parallax>
-        </q-card-media>
-        <q-card-title v-else>
-          Dependencies
+        <q-card-separator />
+        <q-card-title>
+          <i class="far fa-hand-point-right"></i> Dependencies
         </q-card-title>
         <q-card-main>
           <q-btn disabled flat v-if="!Array.isArray(upload.dependencies) || upload.dependencies.length === 0">
@@ -121,15 +113,9 @@
             </div>
           </div>
         </q-card-main>
-        <q-card-media v-if="upload.pic" overlay-position="bottom">
-          <q-card-title slot="overlay">
-            File downloads
-          </q-card-title>
-          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`" :height="150">
-          </q-parallax>
-        </q-card-media>
-        <q-card-title v-else>
-          File downloads
+        <q-card-separator />
+        <q-card-title>
+          <i class="far fa-hand-point-right"></i> File downloads
         </q-card-title>
         <q-card-main>
           <q-btn disabled flat v-if="!Array.isArray(upload.files) || upload.files.length === 0">
@@ -141,10 +127,13 @@
                :key="fid._id">
             <q-btn loader
                    no-caps
+                   outline
+                   icon="fa-download"
                    color="primary"
                    :percentage="(downloadProgresses[fid._id] || {}).percentage"
-                   @click="(event, done) => {downloadMedia(fid._id, fid.filename, done)}">
-              {{ fid.filename }} ({{ fid.length|prettyBytes }})
+                   :loading="downloadProgresses[fid._id] && downloadProgresses[fid._id].percentage < 100"
+                   @click="(event, done) => {downloadMedia(fid._id, fid.filename, done)}"
+                   :label="`${fid.filename} (${$options.filters.prettyBytes(fid.length)})`">
               <span slot="loading">Downloading...</span>
             </q-btn>
             <span v-if="downloadProgresses[fid._id]">
@@ -157,15 +146,9 @@
               </span>
           </div>
         </q-card-main>
-        <q-card-media v-if="upload.pic" overlay-position="bottom">
-          <q-card-title slot="overlay">
-            Other data
-          </q-card-title>
-          <q-parallax :src="`${$http.defaults.baseURL}/media/${upload.pic._id}`" :height="150">
-          </q-parallax>
-        </q-card-media>
-        <q-card-title v-else>
-          Other data
+        <q-card-separator />
+        <q-card-title>
+          <i class="far fa-hand-point-right"></i> Other data
         </q-card-title>
         <q-card-main>
           <p>ID: {{ upload._id }}</p>
@@ -197,6 +180,9 @@
       },
       username () {
         return this.$store.state.user.decodedToken.username
+      },
+      loggedIn () {
+        return this.$store.getters['user/loggedIn']
       },
     },
     watch: {
@@ -310,4 +296,6 @@
 </script>
 
 <style lang="styl" type="text/stylus" scoped>
+  .q-card-main
+    margin-left: 1rem
 </style>
