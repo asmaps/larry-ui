@@ -69,7 +69,7 @@
 
 <style>
   body {
-    background: white url('/assets/bodybg.jpg') no-repeat fixed;
+    background: white url('/statics/bodybg.jpg') no-repeat fixed;
   }
 
   .q-layout-header .q-toolbar {
