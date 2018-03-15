@@ -1,6 +1,9 @@
 <template>
-  <div class="flex row">
-    <div class="col" v-if="authToken">
+  <div>
+    <h5 v-if="!authToken">
+      Please log in first
+    </h5>
+    <div v-else>
       <h5>Upload your own mod</h5>
       <q-stepper ref="stepper" style="max-width: 800px" alternative-labels>
         <q-step default name="data" title="Enter data" :error="errors.slug || errors.title || errors.description">
@@ -120,9 +123,6 @@
         </q-step>
         <q-inner-loading :visible="saving" />
       </q-stepper>
-    </div>
-    <div v-else>
-      Please log in first
     </div>
   </div>
 </template>

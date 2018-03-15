@@ -1,35 +1,32 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-layout-header>
-      <q-toolbar color="primary" glossy>
-
+      <q-toolbar>
         <q-toolbar-title>
           Larry UI
           <div slot="subtitle">Official source of mods for OpenClonk</div>
         </q-toolbar-title>
 
-        <q-toolbar-title v-if="$store.getters['user/loggedIn']">
-          Hi {{ $store.state.user.decodedToken.username }}
-        </q-toolbar-title>
+        <q-tabs>
+          <q-route-tab slot="title"
+                       icon="fa-list"
+                       :to="{name: 'upload-list'}"
+                       replace
+                       hide="icon"
+                       label="Browse mods" />
+
+          <q-route-tab slot="title"
+                       icon="fa-upload"
+                       :to="{name: 'upload-create'}"
+                       replace hide="icon"
+                       label="Upload mod" />
+        </q-tabs>
+
         <q-btn flat icon="fa-sign-out" v-if="$store.getters['user/loggedIn']" @click="$store.commit('user/logout')">
           Logout
         </q-btn>
       </q-toolbar>
 
-      <q-tabs>
-        <q-route-tab slot="title"
-                     icon="fa-list"
-                     :to="{name: 'upload-list'}"
-                     replace
-                     hide="icon"
-                     label="Browse mods" />
-
-        <q-route-tab slot="title"
-                     icon="fa-upload"
-                     :to="{name: 'upload-create'}"
-                     replace hide="icon"
-                     label="Upload mod" />
-      </q-tabs>
     </q-layout-header>
 
     <q-page-container>
@@ -71,6 +68,22 @@
 </script>
 
 <style>
+  body {
+    background: white url('/assets/bodybg.jpg') no-repeat fixed;
+  }
+
+  .q-layout-header .q-toolbar {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .q-layout-header .q-tabs-head {
+    background-color: transparent;
+  }
+
+  .light-bg, .q-card, .q-stepper {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
   .indent {
     margin-left: 1rem;
   }

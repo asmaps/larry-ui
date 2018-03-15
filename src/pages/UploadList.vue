@@ -7,8 +7,10 @@
     </transition>
     <div class="animateMaxWidth" :class="showList ? 'col-12' : 'gt-md col-lg-4 col-xl-5'">
       <q-table
+        class="light-bg"
         no-data-label="No mods available"
         row-key="name"
+        title="Available Mods"
         :data="uploads"
         :config="tableConfig"
         :columns="tableColumns"
@@ -44,7 +46,7 @@
       },
       visibleColumns () {
         let that = this
-        let removeOnSmall = ['description']
+        let removeOnSmall = ['description', 'action']
         return this.tableColumns.map(el => el.name).filter(el => that.showList || removeOnSmall.indexOf(el) === -1)
       },
     },
