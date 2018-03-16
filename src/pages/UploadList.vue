@@ -74,22 +74,24 @@
           rowHeight: '60px',
         },
         tableColumns: [
-          {name: 'title', label: 'Title', field: 'title'},
+          {name: 'title', label: 'Title', field: 'title', align: 'left'},
           {
             name: 'description',
             label: 'Description',
             field: 'description',
+            align: 'left',
             format: el => typeof el === 'string' && el.length > 50 ? el.slice(0, 50) + '...' : el,
           },
-          {name: 'author', label: 'Author', field: row => row.author.username},
-          {name: 'voting', label: 'Voting', field: 'voting'},
+          {name: 'author', label: 'Author', field: row => row.author.username, align: 'left'},
+          {name: 'voting', label: 'Voting', field: 'voting', align: 'left'},
           {
             name: 'updatedAt',
             label: 'Last update',
             field: 'updatedAt',
+            align: 'left',
             format: el => moment(el).from(),
           },
-          {name: 'action', label: 'Actions', field: 'action'},
+          {name: 'action', label: 'Actions', field: 'action', align: 'left'},
         ],
       }
     },
