@@ -27,7 +27,7 @@
                  outline
                  icon="fa-download"
                  label="Install mod with OpenClonk" />
-          <q-btn v-if="username === upload.author.username"
+          <q-btn v-if="isAuthor"
                  outline
                  color="negative"
                  icon="fa-trash"
@@ -39,7 +39,7 @@
             <p class="col text-faded">
               <vue-markdown class="markdown" :html="false" :source="upload.description"></vue-markdown>
             </p>
-            <div :class="editDescription ? 'col-md-6' : 'col-auto'" v-if="username === upload.author.username">
+            <div :class="editDescription ? 'col-md-6' : 'col-auto'" v-if="isAuthor">
               <div class="text-right group">
                 <q-btn outline
                        round
@@ -71,26 +71,28 @@
         <q-card-separator />
         <q-card-title>
           <i class="far fa-hand-point-right"></i> Tags
-          <q-btn outline
-                 round
-                 v-if="editTags"
-                 @click="saveUpload()"
-                 color="positive"
-                 size="sm"
-                 icon="fa-save" />
-          <q-btn outline
-                 round
-                 v-if="editTags"
-                 @click="editTags = false; refresh()"
-                 size="sm"
-                 color="negative"
-                 icon="fa-times" />
-          <q-btn outline
-                 round
-                 v-if="!editTags"
-                 @click="editTags = true"
-                 size="sm"
-                 icon="fa-edit" />
+          <span v-if="isAuthor">
+            <q-btn outline
+                   round
+                   v-if="editTags"
+                   @click="saveUpload()"
+                   color="positive"
+                   size="sm"
+                   icon="fa-save" />
+            <q-btn outline
+                   round
+                   v-if="editTags"
+                   @click="editTags = false; refresh()"
+                   size="sm"
+                   color="negative"
+                   icon="fa-times" />
+            <q-btn outline
+                   round
+                   v-if="!editTags"
+                   @click="editTags = true"
+                   size="sm"
+                   icon="fa-edit" />
+          </span>
         </q-card-title>
         <q-card-main>
           <div v-if="!editTags" class="group">
@@ -132,8 +134,9 @@
               :name="(comment.author || {}).username"
               :text="comment.body.split('\n').filter(el => el.trim() !== '')"
               :stamp="$moment(comment.createdAt).format('LLLL')" />
-            <q-btn v-if="username === comment.author.username"
-                   flat
+            <q-btn v-if="isAuthor"
+                   outline
+                   round
                    size="sm"
                    icon="fa-trash"
                    color="negative"
@@ -170,6 +173,28 @@
         <q-card-separator />
         <q-card-title>
           <i class="far fa-hand-point-right"></i> File downloads
+          <span v-if="isAuthor">
+            <q-btn outline
+                   round
+                   v-if="editFiles"
+                   @click="saveUpload()"
+                   color="positive"
+                   size="sm"
+                   icon="fa-save" />
+            <q-btn outline
+                   round
+                   v-if="editFiles"
+                   @click="editFiles = false; refresh()"
+                   size="sm"
+                   color="negative"
+                   icon="fa-times" />
+            <q-btn outline
+                   round
+                   v-if="!editFiles"
+                   @click="editFiles = true"
+                   size="sm"
+                   icon="fa-edit" />
+          </span>
         </q-card-title>
         <q-card-main>
           <q-btn disabled flat v-if="!Array.isArray(upload.files) || upload.files.length === 0">
@@ -177,7 +202,7 @@
           </q-btn>
           <div class="group"
                v-else
-               v-for="fid of upload.files"
+               v-for="(fid, idx) of upload.files"
                :key="fid._id">
             <q-btn loader
                    no-caps
@@ -191,13 +216,27 @@
               <span slot="loading">Downloading...</span>
             </q-btn>
             <span v-if="downloadProgresses[fid._id]">
-                <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in">
-                  <span key="sizeDownloaded" v-if="downloadProgresses[fid._id].percentage < 100">
-                    {{ downloadProgresses[fid._id].loaded|prettyBytes }} / {{ downloadProgresses[fid._id].total|prettyBytes }}
-                  </span>
-                  <span key="downloadDone" v-else><i class="fa fa-check fa-2x text-positive"></i></span>
-                </transition>
-              </span>
+              <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in">
+                <span key="sizeDownloaded" v-if="downloadProgresses[fid._id].percentage < 100">
+                  {{ downloadProgresses[fid._id].loaded|prettyBytes }} / {{ downloadProgresses[fid._id].total|prettyBytes }}
+                </span>
+                <span key="downloadDone" v-else><i class="fa fa-check fa-2x text-positive"></i></span>
+              </transition>
+            </span>
+            <q-btn v-if="isAuthor && editFiles"
+                   outline
+                   round
+                   size="sm"
+                   icon="fa-trash"
+                   color="negative"
+                   @click="upload.files.splice(idx, 1)"/>
+          </div>
+          <div v-if="editFiles">
+            <dropzone id="filesDropzone"
+                      ref="filesDropzone"
+                      @vdropzone-success="uploadSuccess"
+                      :options="filesDropzoneOptions">
+            </dropzone>
           </div>
         </q-card-main>
         <q-card-separator />
@@ -216,6 +255,8 @@
 </template>
 
 <script>
+  import Dropzone from 'vue2-dropzone'
+  import 'vue2-dropzone/dist/vue2Dropzone.css'
   import { openURL } from 'quasar'
   import UploadVoter from 'components/UploadVoter'
   import CommentVoter from 'components/CommentVoter'
@@ -225,6 +266,7 @@
   export default {
     components: {
       CommentVoter,
+      Dropzone,
       UploadVoter,
       VueMarkdown,
     },
@@ -232,11 +274,24 @@
       routeId () {
         return this.$route.params.uploadId
       },
+      isAuthor () {
+        return this.upload && this.upload.author && this.upload.author.username === this.username
+      },
       username () {
         return this.$store.state.user.decodedToken.username
       },
       loggedIn () {
         return this.$store.getters['user/loggedIn']
+      },
+      filesDropzoneOptions () {
+        return {
+          url: `${this.$http.defaults.baseURL}/media`,
+          paramName: 'media',
+          headers: { Authorization: `Bearer ${this.$store.state.user.authToken}` },
+          acceptedFiles: '.ocs,.ocf,.ocd,.ocg,.ocr,.c4d,.c4g,.c4f,.c4r,.c4s,c4v',
+          dictDefaultMessage: "<p><i class='fa fa-3x fa-cloud-upload'></i></p><p>Drop your mod files here or click to upload</p>",
+          maxFilesize: 30, // MB
+        }
       },
     },
     watch: {
@@ -258,6 +313,7 @@
         commentSaving: false,
         editDescription: false,
         editTags: false,
+        editFiles: false,
       }
     },
     methods: {
@@ -284,11 +340,17 @@
           console.error(error)
         })
       },
+      uploadSuccess (file, response) {
+        this.upload.files.push(response)
+        this.$refs.filesDropzone.removeFile(file)
+        this.$q.notify({type: 'positive', message: 'File uploaded successfully. Press the save button to activate it.'})
+      },
       saveUpload () {
         let that = this
         this.$http.put(`/uploads/${this.upload._id}`, this.upload).then(response => {
           that.editDescription = false
           that.editTags = false
+          that.editFiles = false
           that.refresh()
         }).catch(() => that.$q.notify('Failed to save mod'))
       },

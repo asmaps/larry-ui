@@ -216,7 +216,6 @@
         this.$refs.picDropzone.disable()
       },
       uploadSuccess (file, response) {
-        console.log({success: file, xhr: response})
         this.files.push(response)
         this.$refs.filesDropzone.removeFile(file)
       },
