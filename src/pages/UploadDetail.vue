@@ -69,11 +69,36 @@
           </div>
         </q-card-main>
         <q-card-separator />
-        <q-card-title><i class="far fa-hand-point-right"></i> Tags</q-card-title>
+        <q-card-title>
+          <i class="far fa-hand-point-right"></i> Tags
+          <q-btn outline
+                 round
+                 v-if="editTags"
+                 @click="saveUpload()"
+                 color="positive"
+                 size="sm"
+                 icon="fa-save" />
+          <q-btn outline
+                 round
+                 v-if="editTags"
+                 @click="editTags = false; refresh()"
+                 size="sm"
+                 color="negative"
+                 icon="fa-times" />
+          <q-btn outline
+                 round
+                 v-if="!editTags"
+                 @click="editTags = true"
+                 size="sm"
+                 icon="fa-edit" />
+        </q-card-title>
         <q-card-main>
-          <div class="group">
+          <div v-if="!editTags" class="group">
             <q-chip v-for="tag of upload.tags" :key="tag">{{ tag }}</q-chip>
           </div>
+          <q-chips-input v-model="upload.tags"
+                         v-else
+                         float-label="Tags" />
         </q-card-main>
         <q-card-separator />
         <q-card-title><i class="far fa-hand-point-right"></i> Comments</q-card-title>
@@ -232,6 +257,7 @@
         comment: '',
         commentSaving: false,
         editDescription: false,
+        editTags: false,
       }
     },
     methods: {
@@ -262,6 +288,7 @@
         let that = this
         this.$http.put(`/uploads/${this.upload._id}`, this.upload).then(response => {
           that.editDescription = false
+          that.editTags = false
           that.refresh()
         }).catch(() => that.$q.notify('Failed to save mod'))
       },
