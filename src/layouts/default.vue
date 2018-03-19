@@ -109,4 +109,8 @@
     font-size: 1.0rem;
     font-style: italic;
   }
+
+  .markdown img {
+    display: none;
+  }
 </style>
