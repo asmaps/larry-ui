@@ -35,9 +35,38 @@
                  label="Delete mod" />
         </q-card-actions>
         <q-card-main>
-          <p class="text-faded">
-            <vue-markdown class="markdown" :html="false" :source="upload.description"></vue-markdown>
-          </p>
+          <div class="row gutter-sm">
+            <p class="col text-faded">
+              <vue-markdown class="markdown" :html="false" :source="upload.description"></vue-markdown>
+            </p>
+            <div :class="editDescription ? 'col-md-6' : 'col-auto'" v-if="username === upload.author.username">
+              <div class="text-right group">
+                <q-btn outline
+                       round
+                       v-if="editDescription"
+                       @click="saveUpload()"
+                       color="positive"
+                       size="sm"
+                       icon="fa-save" />
+                <q-btn outline
+                       round
+                       v-if="editDescription"
+                       @click="editDescription = false; refresh()"
+                       size="sm"
+                       color="negative"
+                       icon="fa-times" />
+                <q-btn outline
+                       round
+                       v-if="!editDescription"
+                       @click="editDescription = true"
+                       size="sm"
+                       icon="fa-edit" />
+              </div>
+              <q-input v-if="editDescription"
+                       v-model="upload.description"
+                       type="textarea" />
+            </div>
+          </div>
         </q-card-main>
         <q-card-separator />
         <q-card-title><i class="far fa-hand-point-right"></i> Tags</q-card-title>
@@ -202,6 +231,7 @@
         comments: [],
         comment: '',
         commentSaving: false,
+        editDescription: false,
       }
     },
     methods: {
@@ -227,6 +257,13 @@
           that.$q.notify('Failed loading comments')
           console.error(error)
         })
+      },
+      saveUpload () {
+        let that = this
+        this.$http.put(`/uploads/${this.upload._id}`, this.upload).then(response => {
+          that.editDescription = false
+          that.refresh()
+        }).catch(() => that.$q.notify('Failed to save mod'))
       },
       deleteUpload (upload) {
         let that = this
